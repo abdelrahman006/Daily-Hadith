@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>الأربعون الرياضية – جدول القراءة</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green-dark:  #1a3a2a;
+    --green-mid:   #2d6a4f;
+    --green-light: #52b788;
+    --gold:        #c9a84c;
+    --gold-light:  #e8c97a;
+    --cream:       #fdf8ef;
+    --cream-dark:  #f3ead8;
+    --text-dark:   #1a1a1a;
+    --text-mid:    #3d3d3d;
+    --shadow:      rgba(26,58,42,.18);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Cairo',sans-serif; background:var(--cream); color:var(--text-dark); min-height:100vh; }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg,var(--green-dark) 0%,var(--green-mid) 60%,#3a7a5a 100%);
+    padding: 48px 24px 36px; text-align:center; position:relative; overflow:hidden;
+  }
+  header::before {
+    content:''; position:absolute; inset:0;
+    background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); opacity:.6;
+  }
+  header .ornament { font-size:28px; color:var(--gold-light); letter-spacing:8px; margin-bottom:12px; opacity:.85; }
+  header h1 { font-family:'Amiri',serif; font-size:clamp(32px,5vw,52px); color:#fff; line-height:1.3; text-shadow:0 2px 12px rgba(0,0,0,.35); }
+  header h2 { font-family:'Amiri',serif; font-size:clamp(16px,2.5vw,22px); color:var(--gold-light); font-weight:400; margin-top:8px; }
+  .badge-row { display:flex; justify-content:center; gap:16px; margin-top:20px; flex-wrap:wrap; }
+  .badge { background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.25); border-radius:50px; padding:6px 18px; font-size:13px; color:var(--cream); backdrop-filter:blur(4px); }
+
+  /* LEGEND */
+  .legend { display:flex; justify-content:center; gap:20px; padding:16px 24px; background:var(--green-dark); flex-wrap:wrap; }
+  .legend-item { display:flex; align-items:center; gap:8px; font-size:13px; color:var(--cream); }
+  .legend-dot { width:14px; height:14px; border-radius:50%; flex-shrink:0; }
+
+  /* STATS */
+  .stats-bar { display:flex; justify-content:center; gap:32px; padding:16px 24px 12px; flex-wrap:wrap; }
+  .stat { text-align:center; }
+  .stat-num { font-size:28px; font-weight:700; color:var(--green-mid); line-height:1; }
+  .stat-label { font-size:12px; color:#888; margin-top:2px; }
+
+  /* CONTROLS */
+  .controls { display:flex; justify-content:center; gap:10px; padding:12px 24px 8px; flex-wrap:wrap; }
+  .filter-btn {
+    background:#fff; border:2px solid var(--cream-dark); border-radius:50px;
+    padding:8px 20px; font-family:'Cairo',sans-serif; font-size:13px; cursor:pointer;
+    color:var(--text-mid); transition:all .2s;
+  }
+  .filter-btn:hover, .filter-btn.active { background:var(--green-mid); border-color:var(--green-mid); color:#fff; }
+  .filter-btn.active-done { background:#6c757d; border-color:#6c757d; color:#fff; }
+  .filter-btn.active-mine { background:var(--gold); border-color:var(--gold); color:#fff; }
+
+  /* SEARCH ROW */
+  .search-row {
+    display:flex; justify-content:center; align-items:center;
+    gap:10px; padding:8px 24px 16px; flex-wrap:wrap;
+  }
+
+  /* DROPDOWN */
+  .dropdown-wrap { position:relative; }
+  .dropdown-btn {
+    display:flex; align-items:center; gap:8px; background:#fff;
+    border:2px solid var(--cream-dark); border-radius:50px;
+    padding:9px 18px; font-family:'Cairo',sans-serif; font-size:14px;
+    cursor:pointer; color:var(--text-mid); transition:border-color .2s;
+    white-space:nowrap; min-width:200px; justify-content:space-between;
+  }
+  .dropdown-btn:hover, .dropdown-btn.open { border-color:var(--green-light); }
+  .dropdown-arrow { font-size:10px; transition:transform .2s; }
+  .dropdown-btn.open .dropdown-arrow { transform:rotate(180deg); }
+  .dropdown-menu {
+    display:none; position:absolute; top:calc(100% + 6px); right:0;
+    background:#fff; border:1.5px solid var(--cream-dark);
+    border-radius:14px; box-shadow:0 8px 28px rgba(0,0,0,.14);
+    z-index:200; min-width:240px; overflow:hidden;
+    animation:dropIn .15s ease;
+  }
+  .dropdown-menu.open { display:block; }
+  @keyframes dropIn { from{opacity:0;transform:translateY(-6px)} to{opacity:1;transform:translateY(0)} }
+  .dropdown-item {
+    display:flex; align-items:center; gap:10px; padding:10px 16px;
+    cursor:pointer; font-size:14px; color:var(--text-dark);
+    transition:background .15s; border-bottom:1px solid var(--cream-dark);
+  }
+  .dropdown-item:last-child { border-bottom:none; }
+  .dropdown-item:hover { background:var(--cream); }
+  .dropdown-item.selected { background:#e7f3ee; color:var(--green-mid); font-weight:600; }
+  .d-avatar { width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0; }
+  .d-count { margin-right:auto; font-size:11px; background:var(--cream-dark); border-radius:50px; padding:2px 8px; color:#888; }
+  .dropdown-item.selected .d-count { background:var(--green-mid); color:#fff; }
+
+  /* GRID */
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:16px; padding:0 20px 40px; max-width:1400px; margin:0 auto; }
+
+  /* CARD */
+  .card {
+    background:#fff; border-radius:16px; border:1.5px solid var(--cream-dark);
+    overflow:hidden; display:flex; flex-direction:column;
+    transition:transform .2s,box-shadow .2s; animation:fadeUp .4s ease both;
+  }
+  .card:hover { transform:translateY(-3px); box-shadow:0 8px 32px var(--shadow); }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+
+  /* completed card style */
+  .card.completed {
+    opacity:.55;
+    background:#f9f9f9;
+    border-color:#e0e0e0;
+  }
+  .card.completed .card-header { background:#f4f4f4; }
+  .card.completed .hadith-title { text-decoration:line-through; color:#aaa; }
+  .card.completed .hadith-num { background:linear-gradient(135deg,#adb5bd,#6c757d) !important; }
+
+  .card-header { padding:14px 18px 10px; display:flex; align-items:flex-start; gap:12px; border-bottom:1px solid var(--cream-dark); }
+  .hadith-num {
+    min-width:42px;height:42px;border-radius:12px;
+    background:linear-gradient(135deg,var(--green-mid),var(--green-dark));
+    color:#fff;font-size:15px;font-weight:700;
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;font-family:'Amiri',serif;
+  }
+  .hadith-title { font-family:'Amiri',serif; font-size:18px; font-weight:700; color:var(--green-dark); line-height:1.4; flex:1; padding-top:4px; }
+
+  .card-body { padding:12px 18px; flex:1; display:flex; flex-direction:column; gap:8px; }
+  .info-row { display:flex; align-items:center; gap:8px; font-size:13px; }
+  .info-icon { font-size:14px; flex-shrink:0; }
+  .info-label { color:#999; min-width:52px; }
+  .info-value { color:var(--text-dark); font-weight:600; }
+
+  .card-footer { padding:10px 18px 14px; display:flex; align-items:center; justify-content:space-between; gap:10px; }
+
+  /* reader pill */
+  .reader-pill {
+    display:flex; align-items:center; gap:8px; background:var(--cream);
+    border-radius:50px; padding:6px 14px 6px 8px; border:1.5px solid var(--cream-dark);
+    flex-shrink:0;
+  }
+  .avatar { width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0; }
+  .reader-name { font-size:13px; font-weight:600; color:var(--text-dark); }
+
+  /* CHECKBOX */
+  .check-btn {
+    display:flex; align-items:center; gap:6px;
+    background:none; border:2px solid var(--cream-dark);
+    border-radius:50px; padding:5px 14px;
+    font-family:'Cairo',sans-serif; font-size:12px;
+    cursor:pointer; color:#aaa; transition:all .2s;
+    flex-shrink:0; white-space:nowrap;
+  }
+  .check-btn:hover { border-color:var(--green-light); color:var(--green-mid); }
+  .check-btn.checked { background:var(--green-mid); border-color:var(--green-mid); color:#fff; }
+  .check-btn .check-icon { font-size:14px; }
+
+  /* status badge */
+  .status { font-size:11px; font-weight:600; border-radius:50px; padding:4px 12px; letter-spacing:.5px; }
+  .status-today    { background:#fff3cd; color:#856404; border:1px solid #ffc107; }
+  .status-upcoming { background:#e7f3ee; color:#2d6a4f; border:1px solid #52b788; }
+  .status-done     { background:#f8f9fa; color:#6c757d; border:1px solid #dee2e6; }
+  .status-holiday  { background:#fde8e8; color:#c0392b; border:1px solid #e74c3c; }
+  .status-completed { background:#d1fae5; color:#065f46; border:1px solid #34d399; }
+
+  /* holiday card */
+  .card.holiday { opacity:.55; border-style:dashed; border-color:#e0c4c4; background:#fff8f8; }
+  .card.holiday .card-header { background:#fff0f0; border-bottom:none; }
+
+  /* today card glow */
+  .card.today { border:2px solid var(--gold); box-shadow:0 0 0 4px rgba(201,168,76,.12),0 8px 32px var(--shadow); }
+  .card.today .card-header { background:linear-gradient(135deg,#fffbf0,#fff8e1); }
+
+  /* SECTION HEADER */
+  .section-header { grid-column:1/-1; display:flex; align-items:center; gap:12px; padding:8px 0 4px; margin-top:8px; }
+  .section-header h3 { font-family:'Amiri',serif; font-size:20px; color:var(--green-dark); white-space:nowrap; }
+  .section-line { flex:1; height:1px; background:linear-gradient(to left,transparent,var(--green-light)); }
+
+  .empty { grid-column:1/-1; text-align:center; padding:60px 20px; color:#aaa; font-size:16px; }
+
+  footer { background:var(--green-dark); color:rgba(255,255,255,.6); text-align:center; padding:20px; font-size:13px; margin-top:20px; }
+  footer strong { color:var(--gold-light); }
+
+  @media (max-width:600px) {
+    .grid { grid-template-columns:1fr; padding:0 12px 32px; }
+    .stats-bar { gap:20px; }
+    .dropdown-btn { min-width:160px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="ornament">❧ ✦ ❧</div>
+  <h1>الأربعون الرياضية</h1>
+  <h2>أربعون حديثاً في فضائل الرياضة</h2>
+  <div class="badge-row">
+    <span class="badge">📅 يبدأ: ٥ مايو ٢٠٢٥</span>
+    <span class="badge">👥 ١٠ أفراد</span>
+    <span class="badge">📖 ٤٠ حديثاً</span>
+  </div>
+</header>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:var(--gold)"></div><span>اليوم</span></div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--green-light)"></div><span>قادم</span></div>
+  <div class="legend-item"><div class="legend-dot" style="background:#adb5bd"></div><span>مكتمل</span></div>
+  <div class="legend-item"><div class="legend-dot" style="background:#34d399"></div><span>تم القراءة ✓</span></div>
+  <div class="legend-item"><div class="legend-dot" style="background:#e74c3c"></div><span>إجازة</span></div>
+</div>
+
+<div class="stats-bar">
+  <div class="stat"><div class="stat-num" id="statTotal">0</div><div class="stat-label">إجمالي الأحاديث</div></div>
+  <div class="stat"><div class="stat-num" id="statRead" style="color:#34d399">0</div><div class="stat-label">تمت قراءته</div></div>
+  <div class="stat"><div class="stat-num" id="statRemaining">0</div><div class="stat-label">متبقي</div></div>
+  <div class="stat"><div class="stat-num" id="statHolidays" style="color:#e74c3c">0</div><div class="stat-label">إجازات</div></div>
+</div>
+
+<div class="controls">
+  <button class="filter-btn active" onclick="setFilter('all',this)">الكل</button>
+  <button class="filter-btn" onclick="setFilter('today',this)">اليوم</button>
+  <button class="filter-btn" onclick="setFilter('upcoming',this)">القادمة</button>
+  <button class="filter-btn" onclick="setFilter('completed',this)">تم القراءة ✓</button>
+  <button class="filter-btn" onclick="setFilter('holiday',this)">إجازات</button>
+</div>
+
+<div class="search-row">
+  <!-- person dropdown -->
+  <div class="dropdown-wrap" id="ddWrap">
+    <button class="dropdown-btn" id="ddBtn" onclick="toggleDropdown()">
+      <span id="ddLabel">🔍 ابحث بالاسم</span>
+      <span class="dropdown-arrow">▼</span>
+    </button>
+    <div class="dropdown-menu" id="ddMenu"></div>
+  </div>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<footer>
+  <p>الأربعون الرياضية · <strong>تأليف: محمد خير رمضان يوسف</strong></p>
+  <p style="margin-top:6px">جدول قراءة الفريق · يبدأ الإثنين ٥ مايو ٢٠٢٥ · تُستثنى الجمعة والسبت وإجازات مصر والعيد</p>
+</footer>
+
+<script>
+// ── DATA ──────────────────────────────────────
+const HADITHS = [
+  {n:1,  title:'الأمر بالقوة وترك العجز'},
+  {n:2,  title:'من حق الجسد وحقوقه'},
+  {n:3,  title:'رياضة المشي'},
+  {n:4,  title:'الهرولة.. دليل قوة'},
+  {n:5,  title:'المسابقة بالجري'},
+  {n:6,  title:'التحدي'},
+  {n:7,  title:'اللعب بالحراب والرماح'},
+  {n:8,  title:'التشجيع على التدريب'},
+  {n:9,  title:'دعهم يا عمر'},
+  {n:10, title:'فروسية.. وسباحة'},
+  {n:11, title:'رياضة الصيد'},
+  {n:12, title:'الدفاع عن النفس'},
+  {n:13, title:'المصارعة'},
+  {n:14, title:'مصارعة الفتيان'},
+  {n:15, title:'الملاكمة'},
+  {n:16, title:'مسابقات رياضية'},
+  {n:17, title:'الخير في الخيل'},
+  {n:18, title:'الخيل لثلاثة'},
+  {n:19, title:'الفرس الذي صار بحراً !'},
+  {n:20, title:'المسابقة بين الخيل'},
+  {n:21, title:'سباق ورهان'},
+  {n:22, title:'عندما هشّ رسول الله ﷺ'},
+  {n:23, title:'سباق النوق'},
+  {n:24, title:'تشجيع وزجر منكر'},
+  {n:25, title:'ليس منّا...'},
+  {n:26, title:'المبارزة'},
+  {n:27, title:'القوة البدنية'},
+  {n:28, title:'القوة الرمي'},
+  {n:29, title:'التحريض على الرمي'},
+  {n:30, title:'رياضة ولهو'},
+  {n:31, title:'لهو هادف'},
+  {n:32, title:'الدعاء بالسداد'},
+  {n:33, title:'حسن الرمي'},
+  {n:34, title:'ذم من نسي الرمي'},
+  {n:35, title:'حذار من النسيان'},
+  {n:36, title:'صبر البهائم'},
+  {n:37, title:'لعنة..!'},
+  {n:38, title:'في الأخلاق الرياضية'},
+  {n:39, title:'في التربية الرياضية'},
+  {n:40, title:'تذكير أهل الرياضة'},
+];
+
+const READERS = [
+  'عبد الرحمن محمود',
+  'عبد الرحمن نعسان',
+  'عمرو جابر',
+  'يحيى المصليحي',
+  'محمد لطفي',
+  'محمد خالد',
+  'ندى عادل',
+  'وعد الرحمن الزواوي',
+  'أمين الشجيع',
+  'أدهم جمال',
+];
+
+const AVATAR_COLORS = [
+  '#2d6a4f','#1e6091','#c0392b','#8e44ad',
+  '#d35400','#16a085','#2c3e50','#b7950b',
+  '#1abc9c','#e74c3c'
+];
+
+// Egyptian public holidays 2025
+const HOLIDAYS_2025 = new Set([
+  '2025-01-07','2025-01-25','2025-04-25','2025-05-01',
+  '2025-06-05','2025-06-06','2025-06-07','2025-06-08','2025-06-09',
+  '2025-06-26','2025-07-23','2025-08-06','2025-10-06',
+]);
+
+function isHoliday(date) {
+  const d = date.toISOString().split('T')[0];
+  const dow = date.getDay();
+  return dow === 5 || dow === 6 || HOLIDAYS_2025.has(d);
+}
+
+// ── SCHEDULE ─────────────────────────────────
+function buildSchedule() {
+  const START = new Date('2025-05-05T00:00:00');
+  const schedule = [];
+  let d = new Date(START);
+  let hadithIdx = 0;
+  let readerIdx = 0;
+  while (hadithIdx < HADITHS.length) {
+    const dateStr = d.toISOString().split('T')[0];
+    if (isHoliday(d)) {
+      schedule.push({ date:new Date(d), dateStr, type:'holiday', dayName:getDayName(d) });
+    } else {
+      schedule.push({
+        date:new Date(d), dateStr, type:'work',
+        hadith:HADITHS[hadithIdx],
+        reader:READERS[readerIdx],
+        readerIdx, hadithIdx,
+        dayName:getDayName(d),
+        id: `h${hadithIdx+1}`,
+      });
+      readerIdx = (readerIdx+1) % READERS.length;
+      hadithIdx++;
+    }
+    d.setDate(d.getDate()+1);
+  }
+  return schedule;
+}
+
+function getDayName(d) { return d.toLocaleDateString('ar-EG',{weekday:'long'}); }
+function formatDate(d) { return d.toLocaleDateString('ar-EG',{year:'numeric',month:'long',day:'numeric'}); }
+
+// ── STATE ─────────────────────────────────────
+const STORAGE_KEY = 'arbaoon_completed_v1';
+
+function loadCompleted() {
+  try { return new Set(JSON.parse(localStorage.getItem(STORAGE_KEY)) || []); }
+  catch(e) { return new Set(); }
+}
+function saveCompleted(set) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify([...set]));
+}
+
+let completed = loadCompleted();
+let allItems  = [];
+let currentFilter = 'all';
+let currentPerson = null;  // null = all
+
+// ── HELPERS ───────────────────────────────────
+function getStatus(item) {
+  if (item.type === 'holiday') return 'holiday';
+  if (completed.has(item.id))  return 'completed';
+  if (item.dateStr === TODAY_STR) return 'today';
+  if (item.dateStr < TODAY_STR)  return 'done';
+  return 'upcoming';
+}
+
+function initials(name) {
+  return name.trim().split(' ').map(w=>w[0]).join('').slice(0,2);
+}
+
+const TODAY_STR = new Date().toISOString().split('T')[0];
+
+// ── TOGGLE COMPLETE ───────────────────────────
+function toggleComplete(id) {
+  if (completed.has(id)) { completed.delete(id); }
+  else                   { completed.add(id); }
+  saveCompleted(completed);
+  renderAll();
+}
+
+// ── CARDS ─────────────────────────────────────
+function renderCard(item, idx) {
+  const status = getStatus(item);
+
+  if (item.type === 'holiday') {
+    const reason = item.date.getDay()===5 ? 'إجازة جمعة'
+                 : item.date.getDay()===6 ? 'إجازة سبت' : 'إجازة رسمية';
+    return `
+      <div class="card holiday" data-status="holiday" style="animation-delay:${idx*0.03}s">
+        <div class="card-header">
+          <div class="hadith-num" style="background:linear-gradient(135deg,#c0392b,#922b21)">🌙</div>
+          <div>
+            <div class="hadith-title" style="color:#c0392b;font-size:16px;text-decoration:none">${reason}</div>
+            <div style="font-size:12px;color:#aaa;margin-top:4px">${item.dayName} · ${formatDate(item.date)}</div>
+          </div>
+          <span class="status status-holiday" style="margin-right:auto">إجازة</span>
+        </div>
+      </div>`;
+  }
+
+  const h     = item.hadith;
+  const color = AVATAR_COLORS[item.readerIdx];
+  const isComp = completed.has(item.id);
+
+  const statusLabel = status==='completed' ? 'تم ✓'
+                    : status==='today'     ? 'اليوم'
+                    : status==='done'      ? '—'
+                    : 'قادم';
+  const statusCls   = status==='completed' ? 'status-completed'
+                    : status==='today'     ? 'status-today'
+                    : status==='done'      ? 'status-done'
+                    : 'status-upcoming';
+
+  return `
+    <div class="card ${status==='today'?'today':''} ${isComp?'completed':''}"
+         data-status="${status}" data-id="${item.id}"
+         style="animation-delay:${(idx%20)*0.04}s">
+      <div class="card-header">
+        <div class="hadith-num">${h.n}</div>
+        <div class="hadith-title">${h.title}</div>
+        <span class="status ${statusCls}">${statusLabel}</span>
+      </div>
+      <div class="card-body">
+        <div class="info-row">
+          <span class="info-icon">📅</span>
+          <span class="info-label">التاريخ</span>
+          <span class="info-value">${item.dayName} · ${formatDate(item.date)}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-icon">📖</span>
+          <span class="info-label">الحديث</span>
+          <span class="info-value">رقم ${h.n} من ٤٠</span>
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="reader-pill">
+          <div class="avatar" style="background:${color}">${initials(item.reader)}</div>
+          <span class="reader-name">${item.reader}</span>
+        </div>
+        <button class="check-btn ${isComp?'checked':''}" onclick="toggleComplete('${item.id}')">
+          <span class="check-icon">${isComp?'☑':'☐'}</span>
+          ${isComp ? 'تم القراءة' : 'علّم مكتمل'}
+        </button>
+      </div>
+    </div>`;
+}
+
+function renderMonthHeader(label, idx) {
+  return `
+    <div class="section-header" style="animation-delay:${idx*0.04}s">
+      <h3>${label}</h3><div class="section-line"></div>
+    </div>`;
+}
+
+// ── MAIN RENDER ───────────────────────────────
+function renderAll() {
+  const grid = document.getElementById('grid');
+
+  let filtered = allItems.filter(item => {
+    if (item.type === 'holiday') {
+      return currentFilter === 'all' || currentFilter === 'holiday';
+    }
+    const s = getStatus(item);
+    if (currentFilter !== 'all' && s !== currentFilter) return false;
+    if (currentPerson && item.reader !== currentPerson) return false;
+    return true;
+  });
+
+  // hide holidays when filtering by person
+  if (currentPerson) {
+    filtered = filtered.filter(i => i.type !== 'holiday');
+  }
+
+  if (filtered.length === 0) {
+    grid.innerHTML = '<div class="empty">لا توجد نتائج مطابقة</div>';
+    updateStats();
+    return;
+  }
+
+  let html = '';
+  let lastMonth = '';
+  filtered.forEach((item, idx) => {
+    const monthLabel = item.date.toLocaleDateString('ar-EG',{year:'numeric',month:'long'});
+    if (monthLabel !== lastMonth) { html += renderMonthHeader(monthLabel, idx); lastMonth = monthLabel; }
+    html += renderCard(item, idx);
+  });
+  grid.innerHTML = html;
+  updateStats();
+}
+
+function updateStats() {
+  const workItems = allItems.filter(i => i.type === 'work');
+  const readCount = workItems.filter(i => completed.has(i.id)).length;
+  const rem       = workItems.filter(i => !completed.has(i.id)).length;
+  const hols      = allItems.filter(i => i.type === 'holiday').length;
+  document.getElementById('statTotal').textContent     = workItems.length;
+  document.getElementById('statRead').textContent      = readCount;
+  document.getElementById('statRemaining').textContent = rem;
+  document.getElementById('statHolidays').textContent  = hols;
+}
+
+// ── FILTER ────────────────────────────────────
+function setFilter(type, btn) {
+  currentFilter = type;
+  document.querySelectorAll('.filter-btn').forEach(b => {
+    b.classList.remove('active','active-done','active-mine');
+  });
+  btn.classList.add('active');
+  renderAll();
+}
+
+// ── DROPDOWN ─────────────────────────────────
+function buildDropdown() {
+  const menu = document.getElementById('ddMenu');
+  // count hadiths per reader
+  const counts = {};
+  READERS.forEach(r => counts[r] = 0);
+  allItems.filter(i=>i.type==='work').forEach(i => counts[i.reader]++);
+
+  let html = `
+    <div class="dropdown-item ${currentPerson===null?'selected':''}" onclick="selectPerson(null)">
+      <div class="d-avatar" style="background:#aaa">الكل</div>
+      <span>عرض الجميع</span>
+      <span class="d-count">${allItems.filter(i=>i.type==='work').length}</span>
+    </div>`;
+
+  READERS.forEach((r, i) => {
+    const col = AVATAR_COLORS[i];
+    const sel = currentPerson === r;
+    const doneCount = allItems.filter(it=>it.type==='work'&&it.reader===r&&completed.has(it.id)).length;
+    html += `
+      <div class="dropdown-item ${sel?'selected':''}" onclick="selectPerson('${r}')">
+        <div class="d-avatar" style="background:${col}">${initials(r)}</div>
+        <span>${r}</span>
+        <span class="d-count">${doneCount}/${counts[r]}</span>
+      </div>`;
+  });
+  menu.innerHTML = html;
+}
+
+function toggleDropdown() {
+  const btn  = document.getElementById('ddBtn');
+  const menu = document.getElementById('ddMenu');
+  const open = menu.classList.contains('open');
+  if (!open) buildDropdown();
+  menu.classList.toggle('open', !open);
+  btn.classList.toggle('open', !open);
+}
+
+function selectPerson(name) {
+  currentPerson = name;
+  const label = name ? name : '🔍 ابحث بالاسم';
+  document.getElementById('ddLabel').textContent = label;
+  document.getElementById('ddMenu').classList.remove('open');
+  document.getElementById('ddBtn').classList.remove('open');
+  // if filtering by person, switch to all
+  if (name && currentFilter === 'holiday') {
+    currentFilter = 'all';
+    document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active','active-done','active-mine'));
+    document.querySelector('.filter-btn').classList.add('active');
+  }
+  renderAll();
+}
+
+// close dropdown on outside click
+document.addEventListener('click', e => {
+  if (!document.getElementById('ddWrap').contains(e.target)) {
+    document.getElementById('ddMenu').classList.remove('open');
+    document.getElementById('ddBtn').classList.remove('open');
+  }
+});
+
+// ── BOOT ─────────────────────────────────────
+allItems = buildSchedule();
+renderAll();
+
+requestAnimationFrame(() => {
+  const todayCard = document.querySelector('.card.today');
+  if (todayCard) {
+    setTimeout(() => todayCard.scrollIntoView({behavior:'smooth',block:'center'}), 300);
+  }
+});
+</script>
+</body>
+</html>
