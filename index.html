@@ -199,7 +199,7 @@
   <h1>الأربعون الرياضية</h1>
   <h2>أربعون حديثاً في فضائل الرياضة</h2>
   <div class="badge-row">
-    <span class="badge">📅 يبدأ: ٥ مايو ٢٠٢٥</span>
+    <span class="badge">📅 يبدأ: ٥ مايو ٢٠٢٦</span>
     <span class="badge">👥 ١٠ أفراد</span>
     <span class="badge">📖 ٤٠ حديثاً</span>
   </div>
@@ -243,7 +243,7 @@
 
 <footer>
   <p>الأربعون الرياضية · <strong>تأليف: محمد خير رمضان يوسف</strong></p>
-  <p style="margin-top:6px">جدول قراءة الفريق · يبدأ الإثنين ٥ مايو ٢٠٢٥ · تُستثنى الجمعة والسبت وإجازات مصر والعيد</p>
+  <p style="margin-top:6px">جدول قراءة الفريق · يبدأ الثلاثاء ٥ مايو ٢٠٢٦ · تُستثنى السبت والأحد وإجازات مصر والعيد</p>
 </footer>
 
 <script>
@@ -311,27 +311,28 @@ const AVATAR_COLORS = [
 ];
 
 // Egyptian public holidays 2025
-const HOLIDAYS_2025 = new Set([
-  '2025-01-07','2025-01-25','2025-04-25','2025-05-01',
-  '2025-06-05','2025-06-06','2025-06-07','2025-06-08','2025-06-09',
-  '2025-06-26','2025-07-23','2025-08-06','2025-10-06',
+const HOLIDAYS_2026 = new Set([
+  '2026-01-07','2026-01-25','2026-04-25','2026-05-01',
+  
+  '2026-05-25','2026-05-26','2026-05-27','2026-05-28','2026-05-29',
+  '2026-06-16','2026-07-23','2026-07-27','2026-10-06',
 ]);
 
 function isHoliday(date) {
-  const d = date.toISOString().split('T')[0];
+  const dateStr = `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
   const dow = date.getDay();
-  return dow === 5 || dow === 6 || HOLIDAYS_2025.has(d);
+  return dow === 0 || dow === 6 || HOLIDAYS_2026.has(dateStr);
 }
 
 // ── SCHEDULE ─────────────────────────────────
 function buildSchedule() {
-  const START = new Date('2025-05-05T00:00:00');
+  const START = new Date(2026, 4, 5); // الثلاثاء 5 مايو 2026
   const schedule = [];
   let d = new Date(START);
   let hadithIdx = 0;
   let readerIdx = 0;
   while (hadithIdx < HADITHS.length) {
-    const dateStr = d.toISOString().split('T')[0];
+    const dateStr = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
     if (isHoliday(d)) {
       schedule.push({ date:new Date(d), dateStr, type:'holiday', dayName:getDayName(d) });
     } else {
@@ -351,8 +352,11 @@ function buildSchedule() {
   return schedule;
 }
 
-function getDayName(d) { return d.toLocaleDateString('ar-EG',{weekday:'long'}); }
-function formatDate(d) { return d.toLocaleDateString('ar-EG',{year:'numeric',month:'long',day:'numeric'}); }
+function getDayName(d) {
+  const days = ['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+  return days[d.getDay()];
+}
+function formatDate(d) { return d.toLocaleDateString('ar-EG',{year:'numeric',month:'long',day:'numeric',timeZone:'Africa/Cairo'}); }
 
 // ── STATE ─────────────────────────────────────
 const STORAGE_KEY = 'arbaoon_completed_v1';
@@ -383,7 +387,7 @@ function initials(name) {
   return name.trim().split(' ').map(w=>w[0]).join('').slice(0,2);
 }
 
-const TODAY_STR = new Date().toISOString().split('T')[0];
+const _t = new Date(); const TODAY_STR = `${_t.getFullYear()}-${String(_t.getMonth()+1).padStart(2,'0')}-${String(_t.getDate()).padStart(2,'0')}`;
 
 // ── TOGGLE COMPLETE ───────────────────────────
 function toggleComplete(id) {
